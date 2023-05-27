@@ -11,9 +11,12 @@ import { validarJWT } from '../middlewares/validar-jwt';
 
 const router = Router();
 
-router.get('/', findAuthors);
+router.get('/', [
+    validarJWT
+], findAuthors);
 
 router.get('/:id', [
+    validarJWT,
     check('id', 'No es un ID valido').isMongoId(),
     validarCampos
 ], findAuthorForID);

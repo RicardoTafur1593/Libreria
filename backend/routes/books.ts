@@ -14,6 +14,7 @@ const router = Router();
 router.get('/', findBooks);
 
 router.get('/:id', [
+    validarJWT,
     check('id', 'No es un id de mongo valido').isMongoId(),
     check('id').custom(existeBookPorID),
     validarCampos,

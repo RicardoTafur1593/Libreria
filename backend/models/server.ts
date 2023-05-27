@@ -1,29 +1,46 @@
 import express, { Application } from "express";
 import cors from "cors";
-import userRoutes from "../routes/usuarios";
-import authRoutes from "../routes/auth";
-import authorsRoutes from "../routes/authors";
-import booksRoutes from "../routes/books";
+import http from "http";
+import { Server } from "socket.io";
+
 import { dbConnection } from "../database/config";
+import authRoutes from "../routes/auth";
+import userRoutes from "../routes/usuarios";
+import booksRoutes from "../routes/books";
+import authorsRoutes from "../routes/authors";
+import cartsRoutes from "../routes/carts";
+import { socketCarrito } from "../controllers/socket";
+import { validarJWT } from "../middlewares/validar-jwt";
+import { CustomSocket, comprobarJWT } from "../middlewares/validar-jwt-socket";
 
 
-class Server {
+class Servers {
 
     private app: Application;
     private port: string;
+    private server;
+    private io;
     private apiPaths = {
         auth: '/api/auth',
         usuarios: '/api/usuarios',
         books: '/api/books',
-        authors: '/api/authors'
+        authors: '/api/authors',
+        carts: '/api/carts'
     };
 
     constructor() {
         this.app = express();
         this.port = process.env.PORT || '8000';
+        this.server = http.createServer(this.app);
+        this.io = new Server(this.server, {
+            cors: {
+                origin: '*'
+            }
+        })
 
         this.conectarDB();
         this.middlewares();
+        this.socket();
         this.routes();
     };
 
@@ -33,22 +50,27 @@ class Server {
 
     middlewares() {
         this.app.use(cors());//configuracion del cors
-        this.app.use(express.json());//leer el body
+        this.app.use(express.json());//leer el body        
     };
 
     routes() {
         this.app.use(this.apiPaths.auth, authRoutes)
-        this.app.use(this.apiPaths.authors, authorsRoutes)
-        this.app.use(this.apiPaths.books, booksRoutes)
         this.app.use(this.apiPaths.usuarios, userRoutes);
+        this.app.use(this.apiPaths.books, booksRoutes)
+        this.app.use(this.apiPaths.authors, authorsRoutes)
+        this.app.use(this.apiPaths.carts, cartsRoutes)
+    };
+
+    socket() {
+        this.io.on('connection', (socket) => { socketCarrito(socket, this.io) });
     };
 
     listen() {
-        this.app.listen(this.port, () => {
-            console.log('Servidor Online en el puerto: '+ this.port);
+        this.server.listen(this.port, () => {
+            console.log('Servidor Online en el puerto: ' + this.port);
         });
     };
 
 }
 
-export default Server;
+export default Servers;

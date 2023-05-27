@@ -34,5 +34,5 @@ BookSchema.methods.toJSON = function() {
 };
   
 
-const Book = mongoose.model<Books>('Books', BookSchema);
+const Book = mongoose.model<Books>('Book', BookSchema);
 export { Book };

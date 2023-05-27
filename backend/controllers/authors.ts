@@ -44,7 +44,6 @@ export const postAuthors = async (req: Request, res: Response) => {
 
 export const deleteAuthors = async (req: Request, res: Response) => {
     const { id } = req.params;
-
     const libros = await Book.find({ author: id })
     if (libros.length === 0) {
         const deleteAuthor = await Author.findByIdAndRemove(id);

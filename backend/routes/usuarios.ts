@@ -19,12 +19,14 @@ const router = Router();
 router.get('/', getUsuarios);
 
 router.get('/:id', [
+    validarJWT,
     check('id', 'No es un ID valido').isMongoId(),
     validarCampos
 ], getUsuario);
 
 
 router.post('/',[
+    validarJWT,
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('password', 'El password debe de ser mas de 6 caracteres').isLength({min:6}),
     check('correo', 'El correo no es válido').isEmail(),
@@ -35,12 +37,14 @@ router.post('/',[
 ], postUsuario);
 
 router.post('/roles',[ 
+    validarJWT,
     check('rol', 'El rol es obligatorio').not().isEmpty(),
     validarCampos
 ], postRoles)
 
 
 router.put('/:id', [
+    validarJWT,
     check('id', 'No es un ID valido').isMongoId(),
     validarCampos,
     check('id').custom(existeUsuarioPorId),
