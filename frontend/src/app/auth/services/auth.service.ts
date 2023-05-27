@@ -18,8 +18,6 @@ export class AuthService {
 
   constructor( private http: HttpClient ) { }
 
-
-
   login(correo: string, password: string) {
 
     const url = `${this.baseUrl}/auth/login`;
@@ -27,9 +25,9 @@ export class AuthService {
 
     return this.http.post<AuthResponse>(url, body)
       .pipe(
-        tap( resp => {               
+        tap( resp => {   
           if ( resp.token ){
-            localStorage.setItem('token', resp.token!);          
+            localStorage.setItem('token', resp.token!); 
           }
         }),        
         map( resp => ({ok: resp.ok, rol: resp.usuario?.rol}) ),
@@ -69,7 +67,7 @@ export class AuthService {
               map( resp => {
                 localStorage.setItem('token', resp.token!);
                 this._usuario = {
-                  _id: resp._id!,
+                  uid: resp._id!,
                   nombre: resp.nombre!,
                   correo: resp.correo!,
                   rol: resp.rol!

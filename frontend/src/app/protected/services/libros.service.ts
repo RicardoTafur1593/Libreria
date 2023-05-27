@@ -23,14 +23,12 @@ export class LibrosService {
 
   modificarLibro(miFormulario: FormLibro, _idLibro: string): Observable<Libros> {
     const url = `${this.baseUrl}/books/${_idLibro}`;
-    const headers = new HttpHeaders().set('x-token', localStorage.getItem('token') || '')
-    return this.http.put<Libros>(url, miFormulario, {headers:headers})
+    return this.http.put<Libros>(url, miFormulario)
   }
 
   registarLibro(nuevoLibro: Libros): Observable<Libros> {
     const url = `${this.baseUrl}/books`;
-    const headers = new HttpHeaders().set('x-token', localStorage.getItem('token') || '')
-    return this.http.post<Libros>(url, nuevoLibro, {headers: headers})
+    return this.http.post<Libros>(url, nuevoLibro)
   }
 
   actualizarListaLibros(nuevaListaLibros: Libros[]) {    
@@ -43,8 +41,7 @@ export class LibrosService {
 
   deleteLibro(idLibro: string): Observable<Libros> {
     const url = `${this.baseUrl}/books/${idLibro}`;
-    const headers = new HttpHeaders().set('x-token', localStorage.getItem('token') || '')
-    return this.http.delete<Libros>(url, {headers: headers})
+    return this.http.delete<Libros>(url)
   }
 
 

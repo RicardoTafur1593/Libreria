@@ -20,15 +20,13 @@ export class AutorService {
 
   registrarAuthor(autor: Author) {
     const url = `${this.baseUrl}/authors`;
-    const headers = new HttpHeaders().set('x-token', localStorage.getItem('token') || '')
-    return this.http.post<Author>(url, autor, {headers: headers})
+    return this.http.post<Author>(url, autor)
       .pipe(catchError(err => of(err.error.msg)))
   }
 
   deleteAutor(idAutor: string): Observable<Author> {   
     const url = `${this.baseUrl}/authors/${(idAutor as any)._id}`;
-    const headers = new HttpHeaders().set('x-token', localStorage.getItem('token') || '')
-    return this.http.delete<Author>(url, {headers: headers})
+    return this.http.delete<Author>(url)
       .pipe(catchError(err => of(err.error.msg)))
   }
 

@@ -26,7 +26,8 @@ export class AdminComponent {
   ngOnInit(): void {
     this.librosservice.obtenerListaLibros().subscribe(resp => {     
       this.libros = resp
-    }) 
+    });
+    this.obtenerCarrito();
   }
 
   constructor( 
@@ -42,7 +43,7 @@ export class AdminComponent {
  
   //agregar el libro al carrito
   agregarProducto(libro: Libros) {
-    return this.cartservice.addToCart(libro)
+    return this.cartservice.addToCart(libro).subscribe()
   }
 
   //edit, create, eliminar libros
@@ -73,6 +74,13 @@ export class AdminComponent {
     this.dialog.open(AutorDialogComponent, {
       data: true
     });
+  }
+
+  //manterner carrito
+  obtenerCarrito() {
+    return this.cartservice.carritoItems().subscribe( resp => {
+      this.cartservice.agregarCarrito(resp)      
+    });    
   }
 
 }

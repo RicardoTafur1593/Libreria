@@ -3,9 +3,19 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InterceptorJWTService } from './services/interceptor-jwt.service';
 
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = { url: 'http://localhost:3000',
+  options: {
+    extraHeaders: {
+      'token': localStorage.getItem('token')!//para enviarle en los headers el token
+    }
+  }
+};
 
 @NgModule({
   declarations: [
@@ -15,9 +25,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    SocketIoModule.forRoot(config)
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptorJWTService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 
